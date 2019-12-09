@@ -1,12 +1,12 @@
 {
-  "name": "ngx-vizceral",
+  "name": "angular-vizceral",
   "description": "Angular wrapper library for Vizceral",
-  "bugs": "https://github.com/Effyis/ngx-vizceral/issues",
+  "bugs": "https://github.com/justogaiht/ngx-vizceral/issues",
   "license": "MIT",
-  "version": "1.0.5",
-  "main": "./bundles/ngx-vizceral.umd.js",
-  "module": "./dist/ngx-vizceral.es5.js",
-  "typings": "./dist/ngx-vizceral.d.ts",
+  "version": "1.0.0",
+  "main": "./bundles/angular-vizceral.umd.js",
+  "module": "./dist/angular-vizceral.es5.js",
+  "typings": "./dist/angular-vizceral.d.ts",
   "tslint": {
     "extends": "./tslint.json"
   },
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Effyis/ngx-vizceral.git"
+    "url": "https://github.com/justogaihr/ngx-vizceral.git"
   },
   "dependencies": {
     "lodash": "^4.16.4",
@@ -51,7 +51,7 @@
     "codelyzer": "^4.2.0",
     "core-js": "^2.5.0",
     "cpx": "^1.5.0",
-    "node-sass": "^4.8.0",
+    "node-sass": "^4.13.0",
     "rollup": "^0.57.0",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-sourcemaps": "^0.4.0",
