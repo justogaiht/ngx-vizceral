@@ -201,10 +201,9 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
     if (this.instance) {
       // this.objectsJSON = this.instance.toJSON();
 
-      this.instance.dispose();
+      // this.instance.dispose();
 
       delete this.instance;
-
       this.instance = null;
     }
   }

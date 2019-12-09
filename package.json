@@ -3,7 +3,7 @@
   "description": "Angular wrapper library for Vizceral",
   "bugs": "https://github.com/justogaiht/ngx-vizceral/issues",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./bundles/angular-vizceral.umd.js",
   "module": "./dist/angular-vizceral.es5.js",
   "typings": "./dist/angular-vizceral.d.ts",
