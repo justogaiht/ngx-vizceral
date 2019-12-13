@@ -30,7 +30,7 @@
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,
-    "flatModuleId": "angularx-vizceral",
+    "flatModuleId": "angular-vizceral",
     "flatModuleOutFile": "angular-vizceral.js",
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true
