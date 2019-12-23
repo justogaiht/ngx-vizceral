@@ -1,19 +1,13 @@
-import {vizceral as Vizceral} from 'vizceral';
+import { Directive, DoCheck, ElementRef, EventEmitter, Input, KeyValueDiffer, KeyValueDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import ResizeObserver from 'resize-observer-polyfill';
 import VizceralGraph from 'vizceral';
+import { VizceralSize } from './vizceral.interfaces';
 const isEqual = require('lodash.isequal');
 
 
-import ResizeObserver from 'resize-observer-polyfill';
-
-import {
-  Directive, Optional, Inject,
-  OnInit, OnDestroy, DoCheck, OnChanges,
-  Input, Output, EventEmitter, NgZone, ElementRef,
-  KeyValueDiffer, KeyValueDiffers, SimpleChanges
-} from '@angular/core';
 
 
-import { VizceralSize} from './vizceral.interfaces';
+
 
 @Directive({
   selector: '[vizceral]',
@@ -28,7 +22,6 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
 
   private initialWidth: number = null;
   private initialHeight: number = null;
-  // private initialTraffic: any = null;
 
   private configDiff: KeyValueDiffer<string, any>;
 
@@ -57,30 +50,24 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
     this.setSize(size.width, size.height);
   }
 
- /* @Input()
-  set traffic(data: any) {
-    this.setTraffic(data);
-  }*/
-
-
   private defaultProps = {
-    connectionHighlighted: () =>{},
+    connectionHighlighted: () => { },
     definitions: {},
     filters: [],
     match: '',
-    nodeHighlighted: () =>{},
-    nodeUpdated: () =>{},
-    nodeContextSizeChanged: () =>{},
-    matchesFound: () =>{},
-    objectHighlighted: () =>{},
-    objectHovered: () =>{},
+    nodeHighlighted: () => { },
+    nodeUpdated: () => { },
+    nodeContextSizeChanged: () => { },
+    matchesFound: () => { },
+    objectHighlighted: () => { },
+    objectHovered: () => { },
     objectToHighlight: null,
     showLabels: true,
     allowDraggingOfNodes: false,
     styles: {},
     traffic: {},
-    viewChanged: () =>{},
-    viewUpdated: () =>{},
+    viewChanged: () => { },
+    viewUpdated: () => { },
     view: [],
     targetFramerate: null
   };
@@ -90,46 +77,48 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
 
 
   constructor(private zone: NgZone,
-              private elementRef: ElementRef, private differs: KeyValueDiffers) {
+    private elementRef: ElementRef, private differs: KeyValueDiffers) {
   }
 
   ngOnInit(): void {
-
     this.zone.runOutsideAngular(() => {
-
       this.instance = new VizceralGraph(this.elementRef.nativeElement, this.targetFramerate);
 
-      this.instance.on('viewChanged',  (event) => {
+      this.instance.on('viewChanged', (event) => {
         this.zone.run(() => {
           this.viewChanged.emit(event);
-        }); } );
-      this.instance.on('objectHighlighted',  (event) => {
+        });
+      });
+      this.instance.on('objectHighlighted', (event) => {
         this.zone.run(() => {
           this.objectHighlighted.emit(event);
-        }); } );
-      this.instance.on('objectHovered',  (event) => {
+        });
+      });
+      this.instance.on('objectHovered', (event) => {
         this.zone.run(() => {
           this.objectHovered.emit(event);
-        }); } );
-      this.instance.on('nodeUpdated',  (event) => {
+        });
+      });
+      this.instance.on('nodeUpdated', (event) => {
         this.zone.run(() => {
           this.nodeUpdated.emit(event);
-        }); } );
-      this.instance.on('nodeContextSizeChanged',  (event) => {
+        });
+      });
+      this.instance.on('nodeContextSizeChanged', (event) => {
         this.zone.run(() => {
           this.nodeContextSizeChanged.emit(event);
-        }); } );
-      this.instance.on('matchesFound',  (event) => {
+        });
+      });
+      this.instance.on('matchesFound', (event) => {
         this.zone.run(() => {
           this.matchesFound.emit(event);
-        }); } );
-      this.instance.on('viewUpdated',  (event) => {
+        });
+      });
+      this.instance.on('viewUpdated', (event) => {
         this.zone.run(() => {
           this.viewUpdated.emit(event);
-        }); } );
-
-
-
+        });
+      });
 
 
       // Pass our defaults to Vizceral in the case that it has different defaults.
@@ -140,13 +129,15 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
 
 
       //return back for this
-     if (!isEqual(this.filters, this.defaultProps.filters)) {
+      if (!isEqual(this.filters, this.defaultProps.filters)) {
         this.instance.setFilters(this.filters);
       }
 
       if (!isEqual(this.definitions, this.defaultProps.definitions)) {
         this.instance.updateDefinitions(this.definitions);
       }
+
+      this.instance.updateStyles(this.styles);
 
       // Finish the current call stack before updating the view.
       // If vizceral-react was passed data directly without any asynchronous
@@ -221,18 +212,22 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Data changed..1');
     if (this.instance && changes['disabled']) {
       if (changes['disabled'].currentValue !== changes['disabled'].previousValue) {
         this.ngOnDestroy();
 
         this.ngOnInit();
       }
-      else if(changes['traffic'])
-      {
-        console.log('Data changed..');
+      else if (changes['traffic']) {
         this.instance.updateData(this.traffic);
       }
+      else if (changes['styles']) {
+        this.updateStyles(this.styles);
+      }
+      else if (changes['definitions']) {
+        this.instance.updateDefinitions(this.definitions);
+      }
+
     }
 
   }
@@ -251,7 +246,7 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
     }
   }
 
-  private updateStyles (styles) {
+  private updateStyles(styles) {
     const styleNames = this.instance.getStyles();
     const customStyles = styleNames.reduce((result, styleName) => {
       result[styleName] = styles[styleName] || result[styleName];
@@ -261,12 +256,7 @@ export class VizceralDirective implements OnInit, OnDestroy, DoCheck, OnChanges 
     this.instance.updateStyles(customStyles);
   }
 
-
- /* private setTraffic(data: any) {
-    this.initialTraffic = data;
-    if (this.instance) {
-      console.log('Data changed..')
-      this.instance.updateData(this.initialTraffic);
-    }
-  }*/
+  private updateDefinitions(definitions) {
+    this.instance.updateDefinitions(definitions)
+  }
 }

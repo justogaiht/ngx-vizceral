@@ -1,18 +1,14 @@
-import {
-  Component,
-  AfterViewInit, Input, Output, EventEmitter,
-  ViewChild, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges
-} from '@angular/core';
-
+import { AfterViewInit, Component, EventEmitter, HostBinding, Input, OnChanges, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { VizceralDirective } from './vizceral.directive';
-
 import { VizceralSize } from './vizceral.interfaces';
+
+
 
 @Component({
   selector: 'vizceral',
   exportAs: 'ngxVizceral',
-  template:`<div class="vizceral">
-              <canvas vizceral [traffic]="initData"  [size]="size"  [view]="view" [showLabels]="showLabels" [filters]="filters"
+  template: `<div class="vizceral">
+              <canvas vizceral [definitions]="definitions" [traffic]="initData"  [size]="size"  [view]="view" [showLabels]="showLabels" [filters]="filters"
                       (viewChanged)="viewChanged.emit($event)" (viewUpdated)="viewUpdated.emit($event)" (objectHighlighted)="objectHighlighted.emit($event)"
                       (nodeContextSizeChanged)="nodeContextSizeChanged.emit($event)" [objectToHighlight]="objectToHighlight" (matchesFound)="matchesFound.emit($event)"
                       [match]="match" [modes]="modes" [allowDraggingOfNodes]="allowDraggingOfNodes" [styles]="styles" style=" width:100%; height:100%"
@@ -92,13 +88,14 @@ export class VizceralComponent implements AfterViewInit, OnChanges {
     this.setJSON(data);
   }
 
-  @Input() size: VizceralSize = {width:null,height:null};
+  @Input() size: VizceralSize = { width: null, height: null };
   //@Input() traffic: any = null;
-   @Input()
-     set traffic(data: any) {
-       this.setTraffic(data);
-     }
+  @Input()
+  set traffic(data: any) {
+    this.setTraffic(data);
+  }
 
+  @Input() definitions: any = null;
   @Input() view: any = null;
   @Input() showLabels: any = null;
   @Input() filters: any = null;
@@ -114,7 +111,7 @@ export class VizceralComponent implements AfterViewInit, OnChanges {
   @Input() modes: any = null;
   @Input() allowDraggingOfNodes: any = null;
   @Input() styles: any = null;
-  @Input() targetFramerate:any = null;
+  @Input() targetFramerate: any = null;
 
   @HostBinding('class.vizceral')
 
@@ -132,10 +129,10 @@ export class VizceralComponent implements AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
 
   }
+
   private setTraffic(data: any) {
     this.initData = data;
     if (this.directiveRef && this.directiveRef.vizceral()) {
-      console.log('Data changed..')
       this.directiveRef.vizceral().updateData(data);
     }
   }
